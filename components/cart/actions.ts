@@ -5,7 +5,13 @@ import { addToCart, createCart, getCart, removeFromCart, updateCart } from 'lib/
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export async function addItem(prevState: any, selectedVariantId: string | undefined) {
+export async function addItem(
+  prevState: any,
+  {
+    selectedVariantId,
+    sellingPlanId
+  }: { selectedVariantId: string | undefined; sellingPlanId: string | undefined }
+) {
   let cartId = cookies().get('cartId')?.value;
   let cart;
 
@@ -24,7 +30,10 @@ export async function addItem(prevState: any, selectedVariantId: string | undefi
   }
 
   try {
-    await addToCart(cartId, [{ merchandiseId: selectedVariantId, quantity: 1 }]);
+    await addToCart(cartId, [
+      { merchandiseId: selectedVariantId, quantity: 1, ...(sellingPlanId && { sellingPlanId }) }
+    ]);
+    console.log('add to cart successful')
     revalidateTag(TAGS.cart);
   } catch (e) {
     return 'Error adding item to cart';

@@ -131,6 +131,11 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                     {item.merchandise.title}
                                   </p>
                                 ) : null}
+                                {item.sellingPlanAllocation ? (
+                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    {item.sellingPlanAllocation.sellingPlan.name}
+                                  </p>
+                                ) : null}
                               </div>
                             </Link>
                             <div className="flex h-16 flex-col justify-between">
