@@ -1,11 +1,35 @@
+'use client';
+
 import { AddToCart } from 'components/cart/add-to-cart';
 import Price from 'components/price';
 import Prose from 'components/prose';
-import { Product } from 'lib/shopify/types';
-import { Suspense } from 'react';
+import { Product, ProductVariant } from 'lib/shopify/types';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import SkioPlanPicker from './skio-plan-picker';
 import { VariantSelector } from './variant-selector';
 
 export function ProductDescription({ product }: { product: Product }) {
+  const searchParams = useSearchParams();
+  const defaultVariantId = product.variants.length === 1 ? product.variants[0]?.id : undefined;
+  const variant = product.variants.find((variant: ProductVariant) =>
+    variant.selectedOptions.every(
+      (option) => option.value === searchParams.get(option.name.toLowerCase())
+    )
+  );
+
+  const selectedVariantId = variant?.id || defaultVariantId;
+
+  const [sellingPlanId, setSellingPlanId] = useState<string | undefined>(undefined);
+
+  const onPlanChange = (planId: string) => {
+    if(planId) {
+      setSellingPlanId(`gid://shopify/SellingPlan/${planId}`);
+    } else {
+      setSellingPlanId(undefined);
+    }
+  }
+
   return (
     <>
       <div className="mb-6 flex flex-col border-b pb-6 dark:border-neutral-700">
@@ -29,7 +53,11 @@ export function ProductDescription({ product }: { product: Product }) {
       ) : null}
 
       <Suspense fallback={null}>
-        <AddToCart variants={product.variants} availableForSale={product.availableForSale} />
+      <SkioPlanPicker productHandle={product.handle} selectedVariantId={selectedVariantId} onPlanChange={onPlanChange}/>
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <AddToCart variants={product.variants} availableForSale={product.availableForSale} sellingPlanId={sellingPlanId} />
       </Suspense>
     </>
   );
