@@ -24,10 +24,10 @@ export default function LogoIcon(props: React.ComponentProps<'svg'>) {
           y2="1138.29"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0.075" stop-color="#170127" />
-          <stop offset="0.28" stop-color="#421751" />
-          <stop offset="0.43" stop-color="#53265C" />
-          <stop offset="0.895" stop-color="#A46796" />
+          <stop offset="0.075" stopColor="#170127" />
+          <stop offset="0.28" stopColor="#421751" />
+          <stop offset="0.43" stopColor="#53265C" />
+          <stop offset="0.895" stopColor="#A46796" />
         </linearGradient>
       </defs>
     </svg>
